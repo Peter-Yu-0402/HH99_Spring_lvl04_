@@ -28,7 +28,6 @@ public class LectureController {
     private final LectureService lectureService;
 
     // 강의 등록
-    @Secured(ADMIN)
     @PostMapping("/lecture")
     public ResponseEntity<?> createLecture(@RequestBody LectureRequestDto lectureRequestDto) {
 

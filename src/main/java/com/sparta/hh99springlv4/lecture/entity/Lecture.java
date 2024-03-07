@@ -24,37 +24,36 @@ public class Lecture extends Timestamped {
     private String lectureName;
 
     @Column(nullable = false)
-    private Long price;
+    private Long lecturePrice;
 
     @Column(nullable = false)
-    private String introL;
-
-    @Column(nullable = false)
-    private LocalDate registrationDate; // 타입 임시 지정
+    private String lectureIntro;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING) // Enum 값과 매핑
-    private CategoryEnum category;
+    private CategoryEnum lectureCategory;
+
+    @Column(nullable = false)
+    private LocalDate lectureRegistrationDate; // 타입 임시 지정
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-
-//    // 임의로 매팽
-//    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
-//    private List<Comment> comments = new ArrayList<>();
+    @Column(nullable = false)
+    private String teacherName;
 
 
     public Lecture(LectureRequestDto lectureRequestDto) {
         this.lectureName = lectureRequestDto.getLectureName();
-        this.price = lectureRequestDto.getPrice();
-        this.introL = lectureRequestDto.getIntroL();
-        this.category = CategoryEnum.valueOf(lectureRequestDto.getCategory());
-        this.registrationDate = LocalDate.now();
+        this.lecturePrice = lectureRequestDto.getLecturePrice();
+        this.lectureIntro = lectureRequestDto.getLectureIntro();
+        this.lectureCategory = CategoryEnum.valueOf(lectureRequestDto.getLectureCategory());
+        this.lectureRegistrationDate = LocalDate.now();
+        this.teacherName = lectureRequestDto.getTeacherName();
     }
+
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
-
 }

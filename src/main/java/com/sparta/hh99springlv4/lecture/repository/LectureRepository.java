@@ -1,6 +1,5 @@
 package com.sparta.hh99springlv4.lecture.repository;
 
-
 import com.sparta.hh99springlv4.lecture.entity.CategoryEnum;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -10,6 +10,7 @@ import com.sparta.hh99springlv4.lecture.repository.LectureRepository;
 import com.sparta.hh99springlv4.teacher.dto.TeacherResponseDto;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.teacher.repository.TeacherRepository;
+import com.sparta.hh99springlv4.user.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,6 @@ public class LectureService {
     // 강의 등록 기능
     @Transactional
     public LectureResponseDto createLecture(LectureRequestDto lectureRequestDto) {
-
         Teacher teacherName = teacherRepository.findByTeacherName(lectureRequestDto.getTeacherName());
         if (teacherName == null) {
             throw new IllegalArgumentException("해당 선생님을 찾지 못했습니다");
@@ -112,9 +112,6 @@ public class LectureService {
 
 
 
-
-    // 선택한 강의 조회
-    public LectureResponseDto updateLecture(Long lectureId) {
     // 선택한 강의 정보 수정
 //    public LectureResponseDto infoLecture(Long lectureId, LectureRequestDto lectureRequestDto) {
 //

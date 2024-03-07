@@ -16,7 +16,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@JsonIgnoreProperties({"teacher_name", "career", "company", "phone", "introduction"})
 @Table(name = "teacher")
 public class Teacher {
     @Id
@@ -38,9 +37,6 @@ public class Teacher {
     @Column(nullable = false)
     private String teacherIntro;
 
-
-
-
     @OneToMany(mappedBy = "teacher")
 //    @JsonIgnore
     private List<Lecture> lectureList = new ArrayList<>();
@@ -57,6 +53,14 @@ public class Teacher {
 
 
     public Teacher(TeacherRequestDto teacherRequestDto) {
+        this.teacherName = teacherRequestDto.getTeacherName();
+        this.teacherCareer = teacherRequestDto.getTeacherCareer();
+        this.teacherCompany = teacherRequestDto.getTeacherCompany();
+        this.teacherPhone = teacherRequestDto.getTeacherPhone();
+        this.teacherIntro = teacherRequestDto.getTeacherIntro();
+    }
+
+    public void updateTeacher(TeacherRequestDto teacherRequestDto) {
         this.teacherName = teacherRequestDto.getTeacherName();
         this.teacherCareer = teacherRequestDto.getTeacherCareer();
         this.teacherCompany = teacherRequestDto.getTeacherCompany();
