@@ -1,13 +1,14 @@
 package com.sparta.hh99springlv4.lecture.service;
 
 
-import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
-import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto;
-import com.sparta.hh99springlv4.lecture.dto.LectureTeacherResponseDto;
+import com.sparta.hh99springlv4.comment.dto.CommentResponseDto;
+import com.sparta.hh99springlv4.comment.entity.Comment;
+import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto.*;
+import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto.*;
 import com.sparta.hh99springlv4.lecture.entity.CategoryEnum;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
+import com.sparta.hh99springlv4.lecture.entity.OrderByEnum;
 import com.sparta.hh99springlv4.lecture.repository.LectureRepository;
-import com.sparta.hh99springlv4.teacher.dto.TeacherResponseDto;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.teacher.repository.TeacherRepository;
 import com.sparta.hh99springlv4.user.exception.NotFoundException;
@@ -16,8 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j(topic = "LectureService")
@@ -30,33 +30,94 @@ public class LectureService {
 
     // 강의 등록 기능
     @Transactional
-    public LectureResponseDto createLecture(LectureRequestDto lectureRequestDto) {
-        Teacher teacherName = teacherRepository.findByTeacherName(lectureRequestDto.getTeacherName());
-        if (teacherName == null) {
-            throw new IllegalArgumentException("해당 선생님을 찾지 못했습니다");
-        }
-
+    public CreateLectureResponseDto createLecture(CreateLectureRequestDto lectureRequestDto) {
         // RequestDto -> Entity
         Lecture lecture = new Lecture(lectureRequestDto);
-        lecture.setTeacher(teacherName);
+
+        // teacherName으로 찾은 Teacher 객체
+        Teacher teacher = teacherRepository
+                .findByTeacherName(lecture.getTeacherName())
+                .orElseThrow(() ->
+                        new NotFoundException("해당 이름의 강사를 찾을 수 없습니다." + lectureRequestDto.getTeacherName()));
+
+        // 연관관계 설정
+        lecture.setTeacher(teacher);
 
         // DB에 저장
         Lecture saveLecture = lectureRepository.save(lecture);
 
         // Entity -> ResponseDto
-        LectureResponseDto lectureResponseDto = new LectureResponseDto(saveLecture);
+        CreateLectureResponseDto lectureResponseDto = new CreateLectureResponseDto(saveLecture);
 
         return lectureResponseDto;
     }
 
+    @Transactional
     // 선택한 강의 조회 기능
-    public LectureTeacherResponseDto selectLecture(LectureRequestDto lectureRequestDto) {
+    public ReadLectureResponseDto readLecture(ReadLectureRequestDto lectureRequestDto) {
+        Lecture lecture;
+        if (lectureRequestDto.getId() != null) {
+            lecture = lectureRepository.findById(lectureRequestDto.getId())
+                    .orElseThrow(() -> new NotFoundException("Not found lecture id" + lectureRequestDto.getId()));
+        } else {
+            lecture = lectureRepository.findByLectureName(lectureRequestDto.getLectureName())
+                    .orElseThrow(() -> new NotFoundException("Not found lecture title" + lectureRequestDto.getLectureName()));
+        }
 
-        Lecture lecture = lectureRepository.findByLectureName(lectureRequestDto.getLectureName());
+        // teacherName으로 찾은 Teacher 객체
+        Teacher teacher = teacherRepository
+                .findByTeacherName(lecture.getTeacherName())
+                .orElseThrow(() ->
+                        new NotFoundException("Not found teacher : " + lecture.getTeacherName()));
 
-        Teacher teacher = lecture.getTeacher();
+        // 연관관계 설정
+        lecture.setTeacher(teacher);
+        List<Comment> commentList = lecture.getCommentList();
+        SelectLectureResponseDto responseDto = new SelectLectureResponseDto(lecture);
 
-        return new LectureTeacherResponseDto(lecture);
+        // 댓글 목록을 ResponseDTO에 추가
+        List<CommentResponseDto> commentResponseDtoList = commentList.stream().map(CommentResponseDto::new).toList();
+        return new ReadLectureResponseDto(responseDto, commentResponseDtoList);
+    }
+
+    @Transactional
+    public List<FindLectureResponseDto> findLecturesByCategory(FindLectureRequestDto lectureRequestDto) {
+        // CategoryEnum으로 변환된 카테고리로 강의를 조회
+        Optional<List<Lecture>> optionalLectures = lectureRepository.findAllByLectureCategory(CategoryEnum.valueOf(lectureRequestDto.getLectureCategory()));
+
+        if (optionalLectures.isPresent()) {
+            List<Lecture> lectures = optionalLectures.get();
+
+            // 정렬 기준 설정
+            Comparator<Lecture> comparator = null;
+            // OrderByEnum이 null이 아닌 경우에만 정렬 기준을 설정
+            if (lectureRequestDto.getOrderByEnum() != null) {
+                if (lectureRequestDto.getOrderByEnum().equals(OrderByEnum.LECTURE_NAME)) {
+                    comparator = Comparator.comparing(Lecture::getLectureName);
+                } else if (lectureRequestDto.getOrderByEnum().equals(OrderByEnum.LECTURE_PRICE)) {
+                    comparator = Comparator.comparing(Lecture::getLecturePrice);
+                } else if (lectureRequestDto.getOrderByEnum().equals(OrderByEnum.LECTURE_REGISTRATION_DATE)) {
+                    comparator = Comparator.comparing(Lecture::getLectureRegistrationDate);
+                }
+                // OrderBy 값이 true일 때 내림차순 정렬
+                if (lectureRequestDto.isOrderBy()) {
+                    comparator = comparator.reversed();
+                }
+            }
+
+            // 정렬된 강의 목록을 FindLectureResponseDto로 변환하여 반환
+            if (comparator != null) {
+                lectures.sort(comparator);
+            }
+            return lectures.stream().map(FindLectureResponseDto::new).toList();
+        } else {
+            // 강의 목록이 존재하지 않을 경우 빈 목록 반환
+            log.info("강의 목록이 존재하지 않습니다.");
+            return Collections.emptyList();
+        }
+    }
+}
+
 
 //        -------------------------- LectureResponseDto에 같이 넣어서 가져오는 방법 (두개를 따로 반환도 되나?) ------------------------------
 //        // 받아온 강의 이름으로 repository에서 다른 정보 찾아오기
@@ -88,7 +149,7 @@ public class LectureService {
 //
 ////        return lectureResponseDto;
 
-    }
+
 
 
 //    public LectureCommentDto findLectureComment(Long lectureId) {
@@ -153,15 +214,7 @@ public class LectureService {
 //    }
 
 
-    // 카테고리별 강의 목록 조회 기능
-//    public List<LectureResponseDto> findLecturesByCategory(CategoryEnum category) {
-////        List<Lecture> lectures = lectureRepository.findByCategory(category);
-//        List<LectureResponseDto> lectureResponseDtos = new ArrayList<>();
-////        for (Lecture lecture : lectures) {
-//            lectureResponseDtos.add(new LectureResponseDto(lecture));
-//        }
-//        return lectureResponseDtos;
-//    }
 
-}
+
+
 

@@ -3,12 +3,12 @@ package com.sparta.hh99springlv4.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 
-/// 이거 필요한 클래스인지 확인해주깅 !
 
 @Getter
 @MappedSuperclass
@@ -20,8 +20,8 @@ public abstract class Timestamped {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-//    @LastModifiedDate // 조회하는 entity 객체의 값을 변경할 때, 변경된 시간이 자동으로 저장됨.
-//    @Column
-//    @Temporal(TemporalType.TIMESTAMP)  // 자바의 date, calender 처럼 날짜 데이터를 매핑할 때 사용
-//    private LocalDateTime modifiedAt;
+    @LastModifiedDate // 조회하는 entity 객체의 값을 변경할 때, 변경된 시간이 자동으로 저장됨.
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)  // 자바의 date, calender 처럼 날짜 데이터를 매핑할 때 사용
+    private LocalDateTime modifiedAt;
 }

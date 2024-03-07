@@ -1,6 +1,8 @@
 package com.sparta.hh99springlv4.lecture.entity;
 
 
+import com.sparta.hh99springlv4.comment.entity.Comment;
+import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto.*;
 import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.user.entity.Timestamped;
@@ -10,12 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "Lecture")
-public class Lecture extends Timestamped {
+public class Lecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,26 +39,35 @@ public class Lecture extends Timestamped {
     private CategoryEnum lectureCategory;
 
     @Column(nullable = false)
-    private LocalDate lectureRegistrationDate; // 타입 임시 지정
+    private LocalDate lectureRegistrationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
     @Column(nullable = false)
     private String teacherName;
 
 
-    public Lecture(LectureRequestDto lectureRequestDto) {
+    public Lecture(CreateLectureRequestDto lectureRequestDto) {
         this.lectureName = lectureRequestDto.getLectureName();
         this.lecturePrice = lectureRequestDto.getLecturePrice();
         this.lectureIntro = lectureRequestDto.getLectureIntro();
-        this.lectureCategory = CategoryEnum.valueOf(lectureRequestDto.getLectureCategory());
         this.lectureRegistrationDate = LocalDate.now();
+        this.lectureCategory = CategoryEnum.valueOf(lectureRequestDto.getLectureCategory());
         this.teacherName = lectureRequestDto.getTeacherName();
     }
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
+
+    public void addCommentList(Comment comment) {
+        this.commentList.add(comment);
+        comment.setLecture(this);
+    }
+
 }

@@ -1,10 +1,15 @@
 package com.sparta.hh99springlv4.user.entity;
 
+import com.sparta.hh99springlv4.comment.entity.Comment;
+import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +34,12 @@ public class User {
 
     @Column(nullable = false)
     private String userAddress;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
+    private List<Lecture> lectureList = new ArrayList<>();
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

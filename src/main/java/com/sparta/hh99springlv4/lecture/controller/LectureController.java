@@ -1,22 +1,18 @@
 package com.sparta.hh99springlv4.lecture.controller;
 
-import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
-import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto;
-import com.sparta.hh99springlv4.lecture.dto.LectureTeacherResponseDto;
+import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto.*;
+import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto.*;
 import com.sparta.hh99springlv4.lecture.entity.CategoryEnum;
+import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.lecture.service.LectureService;
-import com.sparta.hh99springlv4.teacher.dto.TeacherRequestDto;
 import com.sparta.hh99springlv4.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.sparta.hh99springlv4.user.entity.UserRoleEnum.Authority.ADMIN;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -29,22 +25,32 @@ public class LectureController {
 
     // 강의 등록
     @PostMapping("/lecture")
-    public ResponseEntity<?> createLecture(@RequestBody LectureRequestDto lectureRequestDto) {
+    public ResponseEntity<?> createLecture(@RequestBody CreateLectureRequestDto lectureRequestDto) {
 
-      LectureResponseDto lectureResponseDto = lectureService.createLecture(lectureRequestDto);
+      CreateLectureResponseDto lectureResponseDto = lectureService.createLecture(lectureRequestDto);
 
       return ResponseEntity.ok(lectureResponseDto);
 
     }
 
     // 선택한 강의 조회
-    @GetMapping("/select/lecture")
-    public LectureTeacherResponseDto selectLecture(@RequestBody LectureRequestDto lectureRequestDto) {
+    @GetMapping("/lecture")
+    public ReadLectureResponseDto readLecture(@RequestBody ReadLectureRequestDto lectureRequestDto) {
 
-        LectureTeacherResponseDto lectureTeacherResponseDto = lectureService.selectLecture(lectureRequestDto);
+        ReadLectureResponseDto lectureResponseDto = lectureService.readLecture(lectureRequestDto);
 
-        return lectureTeacherResponseDto;
+        return lectureResponseDto;
     }
+
+    // 카테고리별 강의 목록 조회
+    @GetMapping("/lecture/category")
+    public List<FindLectureResponseDto> findLecturesByCategory(@RequestBody FindLectureRequestDto lectureRequestDto) {
+
+        List<FindLectureResponseDto> responseDtos = lectureService.findLecturesByCategory(lectureRequestDto);
+        return responseDtos;
+    }
+
+
 
     // 선택한 강의 정보 수정
 //    @PutMapping("/lectureinfo/{lectureId}")
@@ -65,14 +71,5 @@ public class LectureController {
 //        return ResponseEntity.ok(lectureWithCommentsDto);
 //    }
 
-    //     카테고리별 강의 목록 조회
-//    @GetMapping("/find/lecture/{category}")
-//    public List<LectureResponseDto> findCategoryLecuture(@PathVariable CategoryEnum category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        if (userDetails != null
-//                && userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))
-//                || userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-//            return lectureService.findLecturesByCategory(category);
-//        }
-//        throw new IllegalArgumentException("관리자가 아닙니다. 선택한 강사가 촬영한 강의 목록 조회를 할 수 없습니다.");
-//    }
+
 }

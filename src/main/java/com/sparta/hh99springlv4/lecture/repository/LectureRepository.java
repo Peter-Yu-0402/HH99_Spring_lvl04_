@@ -16,7 +16,9 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
 //    List<Lecture> findLecturesByTeacherIdOrderByRegistrationDateDesc(Long teacherId);
 
 //    List<Lecture> findByCategory(CategoryEnum category);
-    Lecture findByLectureName(String lectureName);
+    Optional<Lecture> findByLectureName(String lectureName);
 
-//    Optional<Lecture> findByLectureId(Long lectureId);
+    Optional<List<Lecture>> findAllByLectureCategory(CategoryEnum lectureCategory);
+
+    Optional<Lecture> findById(Long id);
 }

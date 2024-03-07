@@ -37,7 +37,7 @@ public class Teacher {
     @Column(nullable = false)
     private String teacherIntro;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
 //    @JsonIgnore
     private List<Lecture> lectureList = new ArrayList<>();
 
