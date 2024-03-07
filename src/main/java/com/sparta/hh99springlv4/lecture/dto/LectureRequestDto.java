@@ -11,8 +11,10 @@ public class LectureRequestDto {
     private Long price; //가격
     private String introL; //소개
     private String category; //카테고리
-    private LocalDate registrationDate; //등록일
-    private Teacher teacher; //강사이름
+    private String teacherName; //강사이름
+//    Timestamped를 통해 자동으로 입력 받기 때문에 LectureRequestDto에서 제외
+//    private LocalDate registrationDate; //등록일
+
 
 
 }

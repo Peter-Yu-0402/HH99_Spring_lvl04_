@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // 로그인 성공 처리
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
 
         // 인증 결과에서 사용자 정보와 권한(Role) 추출
         String email = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
 
         // void 일때 반환되는 값을 쓰고 싶을때 사용 (throws IOException, ServletException도 위에 기재해야한다)
-        response.getWriter().write("로그인을 완료했습니다.");
+        log.info("사용자 '{}'의 로그인 성공", email);
 
     }
 

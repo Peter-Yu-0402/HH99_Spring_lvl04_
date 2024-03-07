@@ -15,7 +15,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @JsonIgnoreProperties({"teacher_name", "career", "company", "phone", "introduction"})
 @Table(name = "teacher")

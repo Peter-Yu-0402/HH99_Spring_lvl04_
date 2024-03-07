@@ -3,21 +3,19 @@ package com.sparta.hh99springlv4.lecture.entity;
 
 import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
+import com.sparta.hh99springlv4.user.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "Lecture")
-public class Lecture {
+public class Lecture extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +29,6 @@ public class Lecture {
     @Column(nullable = false)
     private String introL;
 
-
     @Column(nullable = false)
     private LocalDate registrationDate; // 타입 임시 지정
 
@@ -42,6 +39,7 @@ public class Lecture {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
 
 //    // 임의로 매팽
 //    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
@@ -54,9 +52,9 @@ public class Lecture {
         this.introL = lectureRequestDto.getIntroL();
         this.category = CategoryEnum.valueOf(lectureRequestDto.getCategory());
         this.registrationDate = LocalDate.now();
-
-        this.teacher = lectureRequestDto.getTeacher();
-
+    }
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 
 }
