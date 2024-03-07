@@ -1,5 +1,6 @@
 package com.sparta.hh99springlv4.teacher.service;
 
+
 import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.lecture.repository.LectureRepository;
@@ -77,14 +78,14 @@ public class TeacherService {
         List<Lecture> teacherLectures = teacher.getLectureList();
 
         // 강의 목록을 등록일 기준으로 내림차순 정렬
-        Collections.sort(teacherLectures, Comparator.comparing(Lecture::getRegistrationDate).reversed());
+//        Collections.sort(teacherLectures, Comparator.comparing(Lecture::getRegistrationDate).reversed());
 
         // 조회된 강의 목록을 DTO 형식으로 변환하여 반환합니다.
-        return teacherLectures.stream()
-                .map(LectureResponseDto::new) // 각 요소에 대해 객체 생성하는것. lecture 연결 후 생성자 고쳐보기
-                .collect(Collectors.toList());
-
-
+//        return teacherLectures.stream()
+//                .map(LectureResponseDto::new) // 각 요소에 대해 객체 생성하는것. lecture 연결 후 생성자 고쳐보기
+//                .collect(Collectors.toList());
+//
+        return null;
     }
 
     // 강사 조회 메서드

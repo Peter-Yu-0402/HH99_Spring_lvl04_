@@ -42,7 +42,7 @@ public class Teacher {
 
 
     @OneToMany(mappedBy = "teacher")
-    @JsonIgnore
+//    @JsonIgnore
     private List<Lecture> lectureList = new ArrayList<>();
 
 //    public void addLectureList(Lecture lecture) {

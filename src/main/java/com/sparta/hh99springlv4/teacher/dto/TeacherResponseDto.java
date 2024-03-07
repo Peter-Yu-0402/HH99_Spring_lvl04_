@@ -13,6 +13,12 @@ public class TeacherResponseDto {
     private String teacherIntro; //소개
 
 
+    public TeacherResponseDto (String teacherName, int teacherCareer, String teacherCompany, String teacherIntro) {
+        this.teacherName = teacherName;
+        this.teacherCareer = teacherCareer;
+        this.teacherCompany = teacherCompany;
+        this.teacherIntro = teacherIntro;
+    }
 
     public TeacherResponseDto(Teacher teacher) {
         this.teacherName = teacher.getTeacherName();
@@ -21,6 +27,7 @@ public class TeacherResponseDto {
         this.teacherPhone = teacher.getTeacherPhone();
         this.teacherIntro = teacher.getTeacherIntro();
     }
+
 //
 //    public TeacherResponseDto (Lecture lecture) {
 //        this.teacherName =  lecture.getTeacher().getTeacherName();

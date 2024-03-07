@@ -1,7 +1,9 @@
 package com.sparta.hh99springlv4.user.service;
 
+
 import com.sparta.hh99springlv4.user.dto.SignupRequestDto;
 import com.sparta.hh99springlv4.user.dto.SignupResponseDto;
+//import com.sparta.hh99springlv4.user.entity.DepartmentEnum;
 import com.sparta.hh99springlv4.user.entity.User;
 import com.sparta.hh99springlv4.user.entity.UserRoleEnum;
 import com.sparta.hh99springlv4.user.repository.UserRepository;

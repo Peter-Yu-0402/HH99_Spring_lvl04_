@@ -1,6 +1,5 @@
 package com.sparta.hh99springlv4.user.config;
 
-
 import com.sparta.hh99springlv4.user.jwt.JwtUtil;
 import com.sparta.hh99springlv4.user.security.JwtAuthenticationFilter;
 import com.sparta.hh99springlv4.user.security.JwtAuthorizationFilter;
