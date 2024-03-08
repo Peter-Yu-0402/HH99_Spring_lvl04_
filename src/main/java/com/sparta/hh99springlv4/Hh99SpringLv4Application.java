@@ -2,9 +2,10 @@ package com.sparta.hh99springlv4;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories
+@EnableJpaAuditing // Timestamped 설정
 @SpringBootApplication
 public class Hh99SpringLv4Application {
 

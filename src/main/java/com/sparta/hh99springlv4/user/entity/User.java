@@ -38,8 +38,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
-    private List<Lecture> lectureList = new ArrayList<>();
+//    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
+//    private List<Lecture> lectureList = new ArrayList<>();
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

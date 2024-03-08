@@ -2,6 +2,7 @@ package com.sparta.hh99springlv4.comment.entity;
 
 import com.sparta.hh99springlv4.comment.dto.CommentRequestDto;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
+import com.sparta.hh99springlv4.user.entity.Timestamped;
 import com.sparta.hh99springlv4.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ import java.time.LocalDateTime;
 //@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Comment")
-public class Comment {
+@Table(name = "comment")
+public class Comment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,17 +27,11 @@ public class Comment {
     @Column(nullable = false) // 댓글내용
     private String contents;
 
-    @Column(nullable = false) // 등록일
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false) // 수정일
-    private LocalDateTime modifiedAt;
-
-    @Column(nullable = false) // 좋아요
-    private Long likes;
+//    @Column(nullable = false) // 좋아요
+//    private Long likes;
 
     // Comment 엔티티(주인)에서 Lecture 엔티티에 대해 참조해야함.
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // LAZY로 해야 서버 부하가 줄어든다.
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 

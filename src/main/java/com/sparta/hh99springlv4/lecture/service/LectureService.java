@@ -9,6 +9,8 @@ import com.sparta.hh99springlv4.lecture.entity.CategoryEnum;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.lecture.entity.OrderByEnum;
 import com.sparta.hh99springlv4.lecture.repository.LectureRepository;
+import com.sparta.hh99springlv4.likes.entity.Likes;
+import com.sparta.hh99springlv4.likes.repository.LikesRepository;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.teacher.repository.TeacherRepository;
 import com.sparta.hh99springlv4.user.exception.NotFoundException;
@@ -27,6 +29,8 @@ public class LectureService {
 
     private final LectureRepository lectureRepository;
     private final TeacherRepository teacherRepository;
+    private final LikesRepository likesRepository;
+
 
     // 강의 등록 기능
     @Transactional
@@ -55,29 +59,57 @@ public class LectureService {
     @Transactional
     // 선택한 강의 조회 기능
     public ReadLectureResponseDto readLecture(ReadLectureRequestDto lectureRequestDto) {
+        log.info("readLecture commencing");
         Lecture lecture;
         if (lectureRequestDto.getId() != null) {
             lecture = lectureRepository.findById(lectureRequestDto.getId())
                     .orElseThrow(() -> new NotFoundException("Not found lecture id" + lectureRequestDto.getId()));
+            log.info("readLecture findById checked");
+
         } else {
             lecture = lectureRepository.findByLectureName(lectureRequestDto.getLectureName())
                     .orElseThrow(() -> new NotFoundException("Not found lecture title" + lectureRequestDto.getLectureName()));
         }
+        // 명세가 달라지는 것, 하나만 하는 것이 오히려 좋은 것이다. 쿼리를 두 번 날리게 되었다.
+        // 두 개로 만드는 경우는 일반적이지 않다. 어색하다. 보통은 PK로 찾는 것이 인덱스로 인해서 검색 성능이 더 우월하다.
+        // DB의 인덱스란? DB의 인덱스란, 레코드를 쉽게 찾기 위해서! 두꺼운 책을 볼 때, 그 색인과 같은 역할이다. 색인이 없다면 처음부터 끝까지 조회해야 하는 대참사.
+        // 배열의 인덱스는 밸류 찾기 위함이고,
+        // DB 인덱스 검색 효율을 높이는 검색 알고리즘이 별도로 있다! 사용하는 자료구조도 다르다!
+        // PK는 인덱스가 걸려있고 검색 효율이 좋다.
 
-        // teacherName으로 찾은 Teacher 객체
-        Teacher teacher = teacherRepository
-                .findByTeacherName(lecture.getTeacherName())
-                .orElseThrow(() ->
-                        new NotFoundException("Not found teacher : " + lecture.getTeacherName()));
+        // teacherName으로 찾은 Teacher 객체 // 티쳐 객체는 이미 렉쳐에 있으니 따로 찾을 필요가 없어다!
+//        Teacher teacher = teacherRepository
+//                .findByTeacherName(lecture.getTeacherName())
+//                .orElseThrow(() ->
+//                        new NotFoundException("Not found teacher : " + lecture.getTeacherName()));
+
+        // 리포지토리에서 검색하는 행위 자체가 조인을 하는 역할을 했다? ManyToOne, 리포지토리에서 findBY하면서 같이 찾아준다. Lazy loading, 내부적으로 프록시를 써서 PK만 갖고 있다가, getTeacher
+        // 위에서 lecture.setTeacher(teacher) // save.()
+        // lecture.getTeacher.get속성();
 
         // 연관관계 설정
-        lecture.setTeacher(teacher);
+//        lecture.setTeacher(teacher); // 불필요한 코드. 이미 위에서 그 역할을 함
         List<Comment> commentList = lecture.getCommentList();
+
+        // 댓글 외 나머지 강의 및 강사 정보 ResponseDTO에 추가
         SelectLectureResponseDto responseDto = new SelectLectureResponseDto(lecture);
 
         // 댓글 목록을 ResponseDTO에 추가
         List<CommentResponseDto> commentResponseDtoList = commentList.stream().map(CommentResponseDto::new).toList();
-        return new ReadLectureResponseDto(responseDto, commentResponseDtoList);
+
+        // 좋아요 집계
+        List<Likes> likesList = likesRepository.findAllByLectureId(lecture.getId());
+        int likesCount = 0;
+        for (Likes likes : likesList) {
+            if (likes.isLikes()) {
+                likesCount++;
+            }
+        }
+
+        return new ReadLectureResponseDto(responseDto, commentResponseDtoList, likesCount);
+//        return responseDto;
+
+
     }
 
     @Transactional

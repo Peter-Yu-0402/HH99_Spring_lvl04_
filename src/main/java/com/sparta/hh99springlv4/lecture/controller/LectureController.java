@@ -5,9 +5,11 @@ import com.sparta.hh99springlv4.lecture.dto.LectureResponseDto.*;
 import com.sparta.hh99springlv4.lecture.entity.CategoryEnum;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.lecture.service.LectureService;
+import com.sparta.hh99springlv4.user.entity.UserRoleEnum;
 import com.sparta.hh99springlv4.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class LectureController {
     private final LectureService lectureService;
 
     // 강의 등록
+    @Secured(UserRoleEnum.Authority.ADMIN)
     @PostMapping("/lecture")
     public ResponseEntity<?> createLecture(@RequestBody CreateLectureRequestDto lectureRequestDto) {
 
@@ -49,7 +52,6 @@ public class LectureController {
         List<FindLectureResponseDto> responseDtos = lectureService.findLecturesByCategory(lectureRequestDto);
         return responseDtos;
     }
-
 
 
     // 선택한 강의 정보 수정

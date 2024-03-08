@@ -4,6 +4,7 @@ import com.sparta.hh99springlv4.comment.dto.CommentRequestDto;
 import com.sparta.hh99springlv4.comment.dto.CommentResponseDto;
 import com.sparta.hh99springlv4.comment.entity.Comment;
 import com.sparta.hh99springlv4.comment.repository.CommentRepository;
+import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
 import com.sparta.hh99springlv4.lecture.entity.Lecture;
 import com.sparta.hh99springlv4.lecture.repository.LectureRepository;
 import com.sparta.hh99springlv4.user.entity.User;
@@ -22,12 +23,11 @@ public class CommentService {
     private final LectureRepository lectureRepository;
     private final CommentRepository commentRepository;
 
-
     @Transactional
     // 댓글 등록 기능  // + entity ? 선택한 강의를 조회할 때 해당 강의에 등록된 댓글들도 함께 조회할 수 있습니다.
     public CommentResponseDto createComment(CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
         Lecture lecture;
-        if (commentRequestDto.getId() != 0) {
+        if (commentRequestDto.getId() != null) {
             lecture = lectureRepository.findById(commentRequestDto.getId())
                     .orElseThrow(() -> new NotFoundException("Not found lecture id" + commentRequestDto.getId()));
         } else {
@@ -52,7 +52,7 @@ public class CommentService {
     public CommentResponseDto updateComment(CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
 
         Lecture lecture;
-        if (commentRequestDto.getId() != 0) {
+        if (commentRequestDto.getId() != null) {
             lecture = lectureRepository.findById(commentRequestDto.getId())
                     .orElseThrow(() -> new NotFoundException("Not found lecture id" + commentRequestDto.getId()));
         } else {
@@ -67,12 +67,12 @@ public class CommentService {
 
         // 2. 조회한 댓글이 선택한 강의의 댓글인지 확인
         // 서비스상 해당 댓글이 선택한 강의의 댓글인지 확인하는 건 덜 중요할 수도
-        if (!comment.getLecture().getId().equals(commentRequestDto.getId())) {
+        if (!lecture.getId().equals(commentRequestDto.getId())) {
             throw new NotFoundException("해당 강의의 댓글이 아닙니다.");
         }
 
         // 3. 댓글을 작성한 사용자와 현재 로그인한 사용자가 일치하는지 확인
-        if (!comment.getUser().getId().equals(userDetails.getUser().getId())) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new UnauthorizedException("본인이 작성한 댓글만 수정할 수 있습니다.");
         }
 
@@ -84,7 +84,7 @@ public class CommentService {
     }
 
     // 선택한 강의의 선택한 댓글 삭제 // + 댓글 등록한 회원만 수정 가능
-    public CommentResponseDto deleteComment(Long commentId, UserDetailsImpl userDetails) {
+    public void deleteComment(Long commentId, UserDetailsImpl userDetails) {
 
         // DB 에서 commentId로 댓글 정보 조회
         Comment comment = commentRepository.findById(commentId)
@@ -97,8 +97,6 @@ public class CommentService {
 
         // 댓글 삭제
         commentRepository.delete(comment);
-
-        return new CommentResponseDto(comment);
     }
 
 

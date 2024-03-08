@@ -69,10 +69,13 @@ public class LectureResponseDto {
     public static class ReadLectureResponseDto {
         private final SelectLectureResponseDto lecture;
         private final List<CommentResponseDto> comments;
+        private final int likesCount;
 
-        public ReadLectureResponseDto(SelectLectureResponseDto lecture, List<CommentResponseDto> comments) {
+
+        public ReadLectureResponseDto(SelectLectureResponseDto lecture, List<CommentResponseDto> comments, int likesCount) {
             this.lecture = lecture;
             this.comments = comments;
+            this.likesCount = likesCount;
         }
 
         // Getter for lecture

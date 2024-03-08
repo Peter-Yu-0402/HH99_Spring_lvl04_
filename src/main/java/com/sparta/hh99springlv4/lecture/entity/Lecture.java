@@ -4,6 +4,7 @@ package com.sparta.hh99springlv4.lecture.entity;
 import com.sparta.hh99springlv4.comment.entity.Comment;
 import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto.*;
 import com.sparta.hh99springlv4.lecture.dto.LectureRequestDto;
+import com.sparta.hh99springlv4.likes.entity.Likes;
 import com.sparta.hh99springlv4.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.user.entity.Timestamped;
 import jakarta.persistence.*;
@@ -48,6 +49,9 @@ public class Lecture {
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "likes", cascade = CascadeType.ALL)
+    private List<Likes> likesList = new ArrayList<>();
+
     @Column(nullable = false)
     private String teacherName;
 
@@ -63,6 +67,11 @@ public class Lecture {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public void addLikesList(Likes likes) {
+        this.likesList.add(likes);
+        likes.setLecture(this);
     }
 
     public void addCommentList(Comment comment) {

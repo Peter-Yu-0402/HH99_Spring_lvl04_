@@ -23,8 +23,8 @@ public class LectureRequestDto {
     @AllArgsConstructor
     @Getter
     public static class ReadLectureRequestDto {
-        private Long id = null;
-        private String lectureName = null;
+        private Long id;
+        private String lectureName;
     }
 
     @AllArgsConstructor
