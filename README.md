@@ -1,7 +1,7 @@
-Spring Lv.4 "스파르타 강의 사이트 서버 만들기"
+# Spring Lv.4 "스파르타 강의 사이트 서버 만들기"
 -----
 
-🐥필수 구현 기능
+## 필수 구현 기능
 -----
 - [ ]  회원 가입 기능
     - `이메일`, `비밀번호`, `성별`, `전화번호`, `주소`, `권한`을 저장할 수 있습니다.
@@ -69,7 +69,7 @@ Spring Lv.4 "스파르타 강의 사이트 서버 만들기"
 - [ ]  공통 기능
     - 로그인 요청의 비밀번호 불일치 등 API 요청의 예외가 발생하는 모든 경우에 대해서 실패(예외상황)에 대해 판단할 수 있는 Status Code, Error 메시지등의 정보를 반환합니다.
      
- 🐥추가 구현 기능
+## 추가 구현 기능
 -----
 - [ ]  대댓글 기능
     - 대댓글이 가능하도록 구현해보세요!
@@ -82,24 +82,28 @@ Spring Lv.4 "스파르타 강의 사이트 서버 만들기"
         - API들이 가지고 있는 스펙(spec)을 명세, 관리할 수 있으며 백엔드와 프론트엔드가 협업할 때 사용할 수 있습니다!
      
           
- Commit Convention
+## Commit Convention
  -----
  
 ![image](https://github.com/yuha00e/hh99-spring-lv4/assets/157124813/f9f7c299-fb30-473e-801d-3392396f9e4d)
  
  etc : 그 외 메모사항이 있는 경우
 
- UCD
- -----
+## Use Case Diagram
+-----
 ![image](https://github.com/yuha00e/hh99-spring-lv4/assets/148833676/fbf473c0-8495-4d1a-a6bb-dae43d465cd4)
 
- 
- API 명세서
- -----
-![Swagger_API_doc.html](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/blob/jaesung/Swagger_API_doc.html)
 
-ERD
+## ERD
 -----
 ![ERD](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/assets/149031461/bcaa4509-5c6c-4b18-ad72-7690365279d3)
+ 
+## API 명세서
+ -----
+![Swagger_API_doc.html](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/blob/jaesung/Swagger_API_doc.html)
+![Swagger UI-1](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/assets/149031461/1cce79b4-f8c1-4c40-8c91-3baabd2b961d)
+![Swagger UI-2](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/assets/149031461/39f5460e-a9a6-4672-ad14-ec27787aef00)
+![Swagger UI-3](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/assets/149031461/fc2da08e-8a17-49b5-85ee-6930580eaa0a)
+
 
 
