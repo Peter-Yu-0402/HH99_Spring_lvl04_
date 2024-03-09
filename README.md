@@ -96,10 +96,10 @@ Spring Lv.4 "스파르타 강의 사이트 서버 만들기"
  
  API 명세서
  -----
-Swagger_API_doc.html
+![Swagger_API_doc.html](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/blob/jaesung/Swagger_API_doc.html)
 
 ERD
 -----
-Entity Relationship Diagram
+![ERD](https://github.com/Peter-Yu-0402/HH99_Spring_lvl04_/assets/149031461/bcaa4509-5c6c-4b18-ad72-7690365279d3)
 
 
