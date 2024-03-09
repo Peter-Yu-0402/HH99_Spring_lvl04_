@@ -3,11 +3,13 @@ package com.sparta.hh99springlv4.domain.lecture.service;
 
 import com.sparta.hh99springlv4.domain.comment.dto.CommentResponseDto;
 import com.sparta.hh99springlv4.domain.comment.entity.Comment;
-import com.sparta.hh99springlv4.domain.lecture.dto.LectureRequestDto;
-import com.sparta.hh99springlv4.domain.lecture.dto.LectureResponseDto;
+import com.sparta.hh99springlv4.domain.lecture.dto.LectureRequestDto.CreateLectureRequestDto;
+import com.sparta.hh99springlv4.domain.lecture.dto.LectureResponseDto.CreateLectureResponseDto;
+import com.sparta.hh99springlv4.domain.lecture.dto.LectureResponseDto.FindLectureResponseDto;
+import com.sparta.hh99springlv4.domain.lecture.dto.LectureResponseDto.ReadLectureResponseDto;
+import com.sparta.hh99springlv4.domain.lecture.dto.LectureResponseDto.SelectLectureResponseDto;
 import com.sparta.hh99springlv4.domain.lecture.entity.CategoryEnum;
 import com.sparta.hh99springlv4.domain.lecture.entity.Lecture;
-import com.sparta.hh99springlv4.domain.lecture.entity.LectureByEnum;
 import com.sparta.hh99springlv4.domain.lecture.entity.OrderByEnum;
 import com.sparta.hh99springlv4.domain.lecture.repository.LectureRepository;
 import com.sparta.hh99springlv4.domain.likes.entity.Likes;
@@ -20,7 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j(topic = "LectureService")
 @Service
@@ -34,7 +37,7 @@ public class LectureService {
 
     // 강의 등록 기능
     @Transactional
-    public LectureResponseDto.CreateLectureResponseDto createLecture(LectureRequestDto.CreateLectureRequestDto lectureRequestDto) {
+    public CreateLectureResponseDto createLecture(CreateLectureRequestDto lectureRequestDto) {
         // RequestDto -> Entity
         Lecture lecture = new Lecture(lectureRequestDto);
 
@@ -51,14 +54,14 @@ public class LectureService {
         Lecture saveLecture = lectureRepository.save(lecture);
 
         // Entity -> ResponseDto
-        LectureResponseDto.CreateLectureResponseDto lectureResponseDto = new LectureResponseDto.CreateLectureResponseDto(saveLecture);
+        CreateLectureResponseDto lectureResponseDto = new CreateLectureResponseDto(saveLecture);
 
         return lectureResponseDto;
     }
 
     @Transactional
     // 선택한 강의 조회 기능
-    public LectureResponseDto.ReadLectureResponseDto readLecture(Long lectureId) {
+    public ReadLectureResponseDto readLecture(Long lectureId) {
         // lectureId로 특정한 Lecture
         Lecture lecture = lectureRepository.findById(lectureId)
                     .orElseThrow(() -> new NotFoundException("Not found lecture id" + lectureId));
@@ -68,7 +71,7 @@ public class LectureService {
         List<Comment> commentList = lecture.getCommentList();
 
         // 댓글 외 나머지 강의 및 강사 정보 ResponseDTO에 추가
-        LectureResponseDto.SelectLectureResponseDto responseDto = new LectureResponseDto.SelectLectureResponseDto(lecture);
+        SelectLectureResponseDto responseDto = new SelectLectureResponseDto(lecture);
 
         // 댓글 목록을 ResponseDTO에 추가
         List<CommentResponseDto> commentResponseDtoList = commentList.stream().map(CommentResponseDto::new).toList();
@@ -81,11 +84,11 @@ public class LectureService {
                 likesCount++;
             }
         }
-        return new LectureResponseDto.ReadLectureResponseDto(responseDto, commentResponseDtoList, likesCount);
+        return new ReadLectureResponseDto(responseDto, commentResponseDtoList, likesCount);
     }
 
     @Transactional
-    public List<LectureResponseDto.FindLectureResponseDto> findLecturesByCategory(String categoryBy, String orderBy, String lectureBy) {
+    public List<FindLectureResponseDto> findLecturesByCategory(String categoryBy, String orderBy, String lectureBy) {
         // Lecture 데이터타입 List 객체 초기화
         List<Lecture> lectureList;
         // switch문 categroyBy, lectureBy
@@ -110,6 +113,6 @@ public class LectureService {
             Collections.reverse(lectureList);
         }
 
-        return lectureList.stream().map(LectureResponseDto.FindLectureResponseDto::new).toList();
+        return lectureList.stream().map(FindLectureResponseDto::new).toList();
     }
 }

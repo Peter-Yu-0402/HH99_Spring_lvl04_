@@ -8,16 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+//@Tag(name = "Comment API", description = "댓글과 관련된 API 정보를 담고 있습니다.")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/lecture/{lectureId}/comment")
 public class CommentController {
 
     private final CommentService commentService;
 
     // 선택한 강의의 댓글 등록
-    @PostMapping("/lecture/{lectureId}/comment")
+//    @Operation(summary = "댓글 등록 기능", description = "댓글을 등록할 수 있는 API")
+    @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long lectureId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -26,9 +27,8 @@ public class CommentController {
     }
 
     // 선택한 강의의 댓글 수정
-    @PutMapping("/lecture/{lectureId}/comment/{commentId}")
-    // 코멘트 아이디만 있어도 댓글 수정이 가능하니, 렉쳐 아이디는 불필요할 수 있다. 매개변수가 많은 건 권장하지 않음
-    // 아예 리퀘스트디티오에 담아서 한꺼번에 담는 방법도 있다.
+//    @Operation(summary = "댓글 수정 기능", description = "댓글을 수정할 수 있는 API")
+    @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long lectureId,
                                            @PathVariable Long commentId,
                                            @RequestBody CommentRequestDto commentRequestDto,
@@ -38,7 +38,8 @@ public class CommentController {
     }
 
     // 선택한 강의의 선택한 댓글 삭제
-    @DeleteMapping("/lecture/{lectureId}/comment/{commentId}")
+//    @Operation(summary = "댓글 삭제 기능", description = "댓글을 삭제할 수 있는 API")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long lectureId,
                                         @PathVariable Long commentId,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {

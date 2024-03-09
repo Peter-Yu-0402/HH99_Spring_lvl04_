@@ -2,7 +2,9 @@ package com.sparta.hh99springlv4.domain.user.controller;
 
 
 import com.sparta.hh99springlv4.domain.user.dto.SignupRequestDto;
+import com.sparta.hh99springlv4.domain.user.dto.SignupResponseDto;
 import com.sparta.hh99springlv4.domain.user.service.UserService;
+import com.sparta.hh99springlv4.global.dto.ResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,27 +19,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+//@Tag(name = "User API", description = "회원과 관련된 API 정보를 담고 있습니다.")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserService userService;
 
     // 회원 가입
-    @PostMapping("/user/signup")
-    // ResponseEntity : HTTP 응답을 나타내는 클래스입니다. HTTP 응답의 상태 코드, 헤더 및 본문(body)을 포함합니다.
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
+//    @Operation(summary = "회원 등록 기능", description = "회원을 등록할 수 있는 API")
+    @PostMapping("/signup")
+    public ResponseEntity<ResponseDto<SignupResponseDto>> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (!fieldErrors.isEmpty()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body("회원가입 요청이 잘못되었습니다.");
+            return ResponseEntity.badRequest().body(
+                    new ResponseDto<>(false, "회원 가입 실패", null));
         }
-        userService.signup(signupRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("회원가입을 성공했습니다.");
+        SignupResponseDto responseDto = userService.signup(signupRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseDto<>(true, "회원 가입", responseDto)
+        );
     }
 }

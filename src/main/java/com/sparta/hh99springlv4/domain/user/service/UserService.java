@@ -9,6 +9,7 @@ import com.sparta.hh99springlv4.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원 가입
+    @Transactional
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         // requestDto에서 getUsername 가져와 변수 username에 담음.
         String userEmail = signupRequestDto.getUserEmail();

@@ -7,6 +7,7 @@ import com.sparta.hh99springlv4.domain.teacher.entity.Teacher;
 import com.sparta.hh99springlv4.domain.teacher.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
 
+    @Transactional
     // 강사 등록 기능
     public TeacherResponseDto createTeacher(TeacherRequestDto teacherRequestDto) {
 

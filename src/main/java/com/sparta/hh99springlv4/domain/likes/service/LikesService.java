@@ -23,9 +23,12 @@ public class LikesService {
     @Transactional
     public LikesResponseDto likeLecture(Long lectureId, UserDetailsImpl userDetails) {
         Likes likes;
-        // 이미 likes 객체 존재하는지 확인
-        if (likesRepository.existsByLectureIdAndUserId(lectureId, userDetails.getUser().getId())) {
-            likes = likesRepository.findByLectureIdAndUserId(lectureId, userDetails.getUser().getId());
+        // 현재 로그인한 사용자의 userId
+        Long userId = userDetails.getUser().getId();
+        // lectureId와 userId를 검색하여 이미 likes 객체 존재하는지 확인
+        if (likesRepository.existsByLectureIdAndUserId(lectureId, userId)) {
+            // 상기 조건에 부합하는 Like 객체 있다면, 호출 후 like 속성값을 변경
+            likes = likesRepository.findByLectureIdAndUserId(lectureId, userId);
             likes.changeLikes();
             // DB에 저장
             Likes saveLikes = likesRepository.save(likes);
@@ -34,7 +37,11 @@ public class LikesService {
 
             return likesResponseDto;
         } else {
+
+            // Like 객체 생성하기
             likes = new Likes();
+
+            // Like 연관관계 설정을 위해 Lecture, User 객체 호출
             // Lecture 객체
             Lecture lecture = lectureRepository
                     .findById(lectureId)
@@ -44,7 +51,7 @@ public class LikesService {
             // User 객체
             User user = userDetails.getUser();
 
-            // 연관관계 설정
+            // 다대일 연관관계 설정
             likes.setLecture(lecture);
             likes.setUser(user);
 
