@@ -62,6 +62,16 @@ public class WebSecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        String[] PUBLIC_URL = {"/v1/api-docs",
+                "/swagger-resources/**",
+                "/api/v1/**",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v1/api-docs/**",
+                "/api-docs/**",
+                "api-docs" };
+
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
@@ -69,6 +79,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers("/api/lecture/lectureBy/**").permitAll() // '/api/lecture/lectureBy/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers("/api/lecture/sorted/**").permitAll() // '/api/lecture/sorted/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers(PUBLIC_URL).permitAll() // swagger 관련 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

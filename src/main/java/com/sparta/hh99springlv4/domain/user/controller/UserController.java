@@ -5,6 +5,8 @@ import com.sparta.hh99springlv4.domain.user.dto.SignupRequestDto;
 import com.sparta.hh99springlv4.domain.user.dto.SignupResponseDto;
 import com.sparta.hh99springlv4.domain.user.service.UserService;
 import com.sparta.hh99springlv4.global.dto.ResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-//@Tag(name = "User API", description = "회원과 관련된 API 정보를 담고 있습니다.")
+@Tag(name = "User API", description = "회원과 관련된 API 정보를 담고 있습니다.")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class UserController {
     private final UserService userService;
 
     // 회원 가입
-//    @Operation(summary = "회원 등록 기능", description = "회원을 등록할 수 있는 API")
+    @Operation(summary = "회원 등록 기능", description = "회원을 등록할 수 있는 API")
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<SignupResponseDto>> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
         // Validation 예외처리
